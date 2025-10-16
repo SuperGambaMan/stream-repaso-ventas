@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourcePerFileMappings">
+    <file url="file://$APPLICATION_CONFIG_DIR$/consoles/db/c3d679c6-0680-4a26-a252-2cdea9e2d394/console.sql" value="c3d679c6-0680-4a26-a252-2cdea9e2d394" />
+    <file url="file://$PROJECT_DIR$/src/org/iesvdm/queries.sql" value="c3d679c6-0680-4a26-a252-2cdea9e2d394" />
+    <file url="file://$PROJECT_DIR$/ventas.sql" value="c3d679c6-0680-4a26-a252-2cdea9e2d394" />
+  </component>
+</project>

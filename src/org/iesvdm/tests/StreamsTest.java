@@ -17,6 +17,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.hibernate.query.criteria.internal.expression.function.AggregationFunction;
 import org.iesvdm.streams.Cliente;
 import org.iesvdm.streams.ClienteHome;
 import org.iesvdm.streams.Comercial;
@@ -113,10 +114,17 @@ class StreamsTest {
 			//PISTA: Generación por sdf de fechas
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			Date ultimoDia2016 = sdf.parse("2016-12-31");
-			
+            Date ultimoDia2017 = sdf.parse("2018-01-01");
+
 			List<Pedido> list = pedHome.findAll();
 				
-			//TODO STREAMS	
+			var listaNueva = list.stream()
+                            .filter(f-> f.getFecha().after(ultimoDia2016)
+                                    && f.getFecha().before(ultimoDia2017)
+                                    && f.getTotal() > 500)
+                                            .toList();
+
+            listaNueva.forEach(s-> System.out.println(s));
 						
 			pedHome.commitTransaction();
 		}
@@ -141,8 +149,13 @@ class StreamsTest {
 			cliHome.beginTransaction();
 	
 			List<Cliente> list = cliHome.findAll();
-			
-			//TODO STREAMS		
+
+            var listaId = list.stream()
+                    .filter(c-> c.getPedidos().isEmpty())
+                    .map(cliente -> cliente.getId())
+                    .toList();
+
+            listaId.forEach(s-> System.out.println(s));
 		
 			cliHome.commitTransaction();
 			
@@ -164,9 +177,16 @@ class StreamsTest {
 		try {
 			comHome.beginTransaction();
 		
-			List<Comercial> list = comHome.findAll();		
-			
-			//TODO STREAMS		
+			List<Comercial> list = comHome.findAll();
+
+            /*Optional<Comercial> optionalComercial = list.stream()
+                    .max(comparing(comercial -> comercial.getComisión()));
+
+            optionalComercial.ifPresentOrElse((comercial -> (System.out.println(comercial.getNombre()
+            + " " + comercial.getComisión()),
+            () -> System.out.println("No hay mayor comision"))
+                    ));
+            */
 				
 			comHome.commitTransaction();
 			
@@ -191,8 +211,15 @@ class StreamsTest {
 			cliHome.beginTransaction();
 	
 			List<Cliente> list = cliHome.findAll();
-			
-			//TODO STREAMS
+
+            var listaId = list.stream()
+                    .filter(c-> c.getApellido2() != null)
+                    .sorted(comparing((Cliente cliente) -> cliente.getApellido1())
+                            .thenComparing(cliente -> cliente.getNombre()))
+                    .map(cliente -> cliente.getId() +" "+ cliente.getNombre() +" "+ cliente.getApellido1())
+                    .toList();
+
+            listaId.forEach(s-> System.out.println(s));
 			
 			cliHome.commitTransaction();
 			
@@ -217,7 +244,9 @@ class StreamsTest {
 		
 			List<Comercial> list = comHome.findAll();		
 			
-			//TODO STREAMS
+            var listaComercialesElO = list.stream()
+                            //.filter(comercial -> comercial.getNombre().lastIndexOf("el") && comercial.getNombre().lastIndexOf("o"))
+                                    .
 			
 			comHome.commitTransaction();
 		}
